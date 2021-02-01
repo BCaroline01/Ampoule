@@ -36,7 +36,7 @@
             <li>
              <?= $ampoule['date_changement'];?> | <?= $ampoule['etage'];?> |  <?= $ampoule['position'];?> | <?= $ampoule['prix'] . '€';?> | 
              <a href="Form.php?id_ampoule=<?= $ampoule['id'] ?>">Modifier</a> | 
-             <a href="http://projet:8080/Ampoule/index.php?idampoule=<?= $ampoule['id'] ?>">Supprimer</a>
+             <a href="http://projet:8080/projet_ampoule/index.php?idampoule=<?= $ampoule['id'] ?>">Supprimer</a>
             </li>
             <?php endforeach; ?>
         </ul>   
