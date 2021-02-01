@@ -26,27 +26,27 @@
         <label for="floor">Etage :</label>
         <select name="floor" id="floor">
             <option value=""></option>
-            <option value="rez-de-chaussee" <?php echo $rdc; ?>>rez-de-chaussée</option>
-            <option value="etage 1" <?php echo $etage1; ?>>étage 1</option>
-            <option value="etage 2" <?php echo $etage2; ?>>étage 2</option>
-            <option value="etage 3" <?php echo $etage3; ?>>étage 3</option>
-            <option value="etage 4" <?php echo $etage4; ?>>étage 4</option>
-            <option value="etage 5"<?php echo $etage5; ?>>étage 5</option>
-            <option value="etage 6"<?php echo $etage6; ?>>étage 6</option>
-            <option value="etage 7"<?php echo $etage7; ?>>étage 7</option>
-            <option value="etage 8"<?php echo $etage8; ?>>étage 8</option>
-            <option value="etage 9"<?php echo $etage9; ?>>étage 9</option>
-            <option value="etage 10"<?php echo $etage10; ?>>étage 10</option>
-            <option value="etage 11"<?php echo $etage11; ?>>étage 11</option>
+            <option value="rez-de-chaussee" >rez-de-chaussée</option>
+            <option value="etage 1" >étage 1</option>
+            <option value="etage 2" >étage 2</option>
+            <option value="etage 3" >étage 3</option>
+            <option value="etage 4" >étage 4</option>
+            <option value="etage 5" >étage 5</option>
+            <option value="etage 6" >étage 6</option>
+            <option value="etage 7" >étage 7</option>
+            <option value="etage 8" >étage 8</option>
+            <option value="etage 9" >étage 9</option>
+            <option value="etage 10" >étage 10</option>
+            <option value="etage 11" >étage 11</option>
         </select>
     </div>
     <div>
         <label for="position">Position :</label>
         <select name="position" id="position">
             <option value=""></option>
-            <option value="gauche"<?php echo $gauche; ?>>côté gauche</option>
-            <option value="droit"<?php echo $droit; ?>>côté droit</option>
-            <option value="fond"<?php echo $fond; ?>>fond</option>
+            <option value="gauche" >côté gauche</option>
+            <option value="droit" >côté droit</option>
+            <option value="fond" >fond</option>
         </select>
     </div>
     <div>
@@ -79,6 +79,4 @@ if(isset($_GET["submit"])){
     $insertion->execute();
 } 
 
-$req=$bdd->prepare("SELECT * FROM `ampoule` WHERE id = :id_ampoule");
-$req->bindValue(':id_ampoule', $_GET['id_ampoule'], PDO::PARAM_INT);
 ?>
