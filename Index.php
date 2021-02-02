@@ -35,16 +35,19 @@
             ?>
             <li>
              <?= $ampoule['date_changement'];?> | <?= $ampoule['etage'];?> |  <?= $ampoule['position'];?> | <?= $ampoule['prix'] . '€';?> | 
-             <a href="Form.php?id_ampoule=<?= $ampoule['id'] ?>">Modifier</a> | 
-             <a href="http://projet:8080/projet_ampoule/index.php?idampoule=<?= $ampoule['id'] ?>">Supprimer</a>
+             <a href="http://projet:8080/projet_ampoule/form.php?id_ampoule=<?= $ampoule['id'] ?>">Modifier</a> | 
+             <a onclick= "return confirm('Voulez vous vraiment supprimer cette ligne?')" href="http://projet:8080/projet_ampoule/index.php?idampoule=<?= $ampoule['id'] ?>" >Supprimer</a>
             </li>
             <?php endforeach; ?>
         </ul>   
 </div>
+<div id="snackbar">La ligne a bien été supprimée.</div>
 </body>
 </html>
 <?php
+if(isset($_GET['idampoule'])){
     $req=$bdd->prepare("DELETE FROM `ampoule` WHERE id = :id_amp");
     $req->bindValue(':id_amp', $_GET['idampoule'], PDO::PARAM_INT);
     $req->execute();
+}    
 ?>
