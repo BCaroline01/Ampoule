@@ -26,25 +26,26 @@
             die();
             }
 
-    $Elementsparpage = 5;
-    $nombreelementreq = $bdd->query("SELECT `id` FROM `ampoule`");
-    $nombreelement = $nombreelementreq->rowCount();
-    $pagestotales = ceil($nombreelement/$Elementsparpage);
+    $page = $_GET['page'];       
+    $lineperpage = 5;
+    $numberlinereq = $bdd->query("SELECT `id` FROM `ampoule`");
+    $numberline = $numberlinereq->rowCount();
+    $totalpage = ceil($numberline/$lineperpage);
 
-    if(isset($_GET['page']) && !empty($_GET['page']) && $_GET['page'] > 0 && $_GET['page'] <= $pagestotales){
-        $_GET['page'] = intval($_GET['page']);
-        $pagecourante = $_GET['page'];
+    if(isset($page) && !empty($page) && $page > 0 && $page <= $totalpage){
+        $page = intval($page);
+        $currentpage = $page;
     } else {
-        $pagecourante = 1;
+        $currentpage = 1;
     }
 
-    $depart = ($pagecourante-1)*$Elementsparpage;
+    $start = ($currentpage-1)*$lineperpage;
 ?>
 <div class="history">
     <h1>Historique : </h1>
         <ul>
             <?php
-                $req=$bdd->query('SELECT * FROM ampoule ORDER BY `date_changement` LIMIT '.$depart.','.$Elementsparpage);
+                $req=$bdd->query('SELECT * FROM ampoule ORDER BY `date_changement` LIMIT '.$start.','.$lineperpage);
                 foreach($req as $ampoule) :
             ?>
             <li>
@@ -57,12 +58,12 @@
 </div>
 <div class="page">        
     <?php
-        for($i=1;$i<=$pagestotales;$i++){
+        for($i=1;$i<=$totalpage;$i++){
              echo '<a href="http://projet:8080/projet_ampoule/index.php?page='.$i.'">'.$i.' </a> ';
         }
     ?>     
 </div>
-<div class="toast">La ligne a bien été supprimé.</div>
+<div id="toast">La ligne a bien été supprimé.</div>
 </body>
 </html>
 <?php
@@ -70,6 +71,6 @@ if(isset($_GET['idampoule'])){
     $req=$bdd->prepare("DELETE FROM `ampoule` WHERE id = :id_amp");
     $req->bindValue(':id_amp', $_GET['idampoule'], PDO::PARAM_INT);
     $req->execute();
-    //echo toast('show');
+    $req = toast();
 }    
 ?>
