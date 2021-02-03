@@ -1,4 +1,4 @@
-<!DOCTYPE html> .
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -38,18 +38,12 @@ if(isset($_GET["submit"])){
               $insertion->bindParam(':price',$price);
               $insertion->execute();  
             }
-    
-
-
 }
 
 $req=$bdd->prepare("SELECT * FROM `ampoule` WHERE id = :id_amp");
 $req->bindParam(':id_amp', $_GET['id_ampoule'], PDO::PARAM_INT);
 $req->execute();
-$ampoule = $req->fetch();
-
-
-   
+$ampoule = $req->fetch(); 
 ?>
 
 <body>
