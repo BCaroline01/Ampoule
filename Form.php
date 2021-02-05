@@ -16,6 +16,15 @@ try {
     die();
     }
 
+//Logout        
+session_start();        
+if(isset($_GET['deconnexion'])){ 
+    if($_GET['deconnexion']==true){  
+        session_destroy();
+        header("location:Index.php");
+    }
+}        
+
 if(isset($_GET["submit"])){
     $date = ($_GET["date"]);
     $floor = ($_GET["floor"]);
@@ -30,6 +39,7 @@ if(isset($_GET["submit"])){
             $update->bindParam(':position',$position);
             $update->bindParam(':price',$price);
             $update->execute();
+            header('Location: History.php');
             } else {
               $insertion = $bdd->prepare ("INSERT INTO `ampoule`(`date_changement`, `etage`, `position`, `prix`) VALUES (:date,:floor, :position, :price)");
               $insertion->bindParam(':date',$date);
@@ -50,18 +60,19 @@ $ampoule = $req->fetch();
 <header>
     <nav>
         <ul>
-            <li><a href="index.php">Accueil</a></li>
-            <li><a href="form.php">Formulaire</a></li>    
+            <li><a href="History.php">Accueil</a></li>
+            <li><a href="Form.php">Formulaire</a></li>
+            <li><a href='Index.php?deconnexion=true'>Déconnexion</a></li>      
         </ul>
     </nav>
 </header>
 <form method="get">
     <div>
-        <input type="hidden" name="id_ampoule" value="<?= $ampoule['id'];?>">
+        <input type="hidden" name="id_ampoule" value="<?= $ampoule['id'] ?? '';?>">
     </div>
     <div>
         <label for="date">Date de changement de l'ampoule :</label>
-        <input type="date" id="date" name="date" value="<?= $ampoule['date_changement'];?>">
+        <input type="date" id="date" name="date" value="<?= $ampoule['date_changement'] ?? '';?>">
     </div>
     <div>
         <label for="floor">Etage :</label>
@@ -92,7 +103,7 @@ $ampoule = $req->fetch();
     </div>
     <div>
         <label for="price">Prix de l'ampoule :</label>
-        <input type="number" id="price" name="price" step="0.01" required  value="<?= $ampoule['prix'];?>"> 
+        <input type="number" id="price" name="price" step="0.01" required  value="<?= $ampoule['prix'] ?? '';?>"> 
     </div>
         <input type="submit" value="Valider" name="submit">
 </form>

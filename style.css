@@ -106,6 +106,7 @@ input{
     background-color: transparent;
 }
 
+
 select{
     background-color: transparent;
 }
@@ -117,4 +118,8 @@ input[type=submit]{
     cursor: pointer;
     font-family: 'Conv_Oswald-VariableFont_wght';
     font-size: 1.3rem;
+}
+
+form.login > input {
+    margin: 1rem;
 }
