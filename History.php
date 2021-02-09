@@ -1,3 +1,18 @@
+<?php
+    session_start(); 
+    if(empty($_SESSION['login'])) {
+        header("location:Index.php");
+        exit;
+    }   
+    if(isset($_GET['deconnexion'])){  
+            $_SESSION = array();
+            unset($_SESSION); 
+            unset($_COOKIE);
+            session_destroy();
+            header("location:Index.php");
+            exit;
+    }        
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,73 +29,63 @@
             <ul>
                 <li><a href="History.php">Accueil</a></li>
                 <li><a href="Form.php">Formulaire</a></li>
-                <li><a href='Index.php?deconnexion=true'>Déconnexion</a></li>  
+                <li><a href="?deconnexion">Déconnexion</a></li>  
             </ul>
         </nav>
-    </header>    
-<?php
-    try {
-        $bdd = new PDO('mysql:host=localhost;dbname=ampoule', 'root');
-        } catch (PDOException $e) {
-            print "Erreur: " . $e->getMessage() . "<br/>";
-            die();
+    </header> 
+    <?php 
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=ampoule', 'root');
+            } catch (PDOException $e) {
+                print "Erreur: " . $e->getMessage() . "<br/>";
+                die();
+                }
+                    
+        //Paging          
+        $lineperpage = 5;
+        $numberlinereq = $bdd->query("SELECT `id` FROM `ampoule`");
+        $numberline = $numberlinereq->rowCount();
+        $totalpage = ceil($numberline/$lineperpage);
+
+        if(isset($_GET['page']) && !empty($_GET['page']) && $_GET['page'] > 0 && $_GET['page'] <= $totalpage){
+            $page = $_GET['page'];
+            $page = intval($page);
+            $currentpage = $page;
+        } else {
+            $currentpage = 1;
+        }
+
+        $start = ($currentpage-1)*$lineperpage;
+    ?>
+    <div class="history">
+        <h1>Historique : </h1>
+            <ul>
+                <?php
+                    $req=$bdd->query('SELECT * FROM ampoule ORDER BY `date_changement` LIMIT '.$start.','.$lineperpage);
+                    foreach($req as $ampoule) :
+                ?>
+                <li>
+                <?= $ampoule['date_changement'];?> | <?= $ampoule['etage'];?> |  <?= $ampoule['position'];?> | <?= $ampoule['prix'] . '€';?> | 
+                <a href="http://projet:8080/projet_ampoule/form.php?id_ampoule=<?= $ampoule['id'] ?>">Modifier</a> | 
+                <a  onclick= "return confirm('Voulez vous vraiment supprimer cette ligne?')"  href="http://projet:8080/projet_ampoule/History.php?idampoule=<?= $ampoule['id'] ?>" >Supprimer</a>
+                </li>
+                <?php endforeach; ?>
+            </ul> 
+    </div>
+    <div class="page">        
+        <?php
+            for($i=1;$i<=$totalpage;$i++){
+                echo '<a href="http://projet:8080/projet_ampoule/History.php?page='.$i.'">'.$i.' </a> ';
             }
-
-    //Logout        
-    session_start();        
-    if(isset($_GET['deconnexion'])){ 
-        if($_GET['deconnexion']==true){  
-            session_destroy();
-            header("location:Index.php");
-        }
-    }        
-    
-               
-    //Paging          
-    $lineperpage = 5;
-    $numberlinereq = $bdd->query("SELECT `id` FROM `ampoule`");
-    $numberline = $numberlinereq->rowCount();
-    $totalpage = ceil($numberline/$lineperpage);
-
-    if(isset($_GET['page']) && !empty($_GET['page']) && $_GET['page'] > 0 && $_GET['page'] <= $totalpage){
-        $page = $_GET['page'];
-        $page = intval($page);
-        $currentpage = $page;
-    } else {
-        $currentpage = 1;
-    }
-
-    $start = ($currentpage-1)*$lineperpage;
-?>
-<div class="history">
-    <h1>Historique : </h1>
-        <ul>
-            <?php
-                $req=$bdd->query('SELECT * FROM ampoule ORDER BY `date_changement` LIMIT '.$start.','.$lineperpage);
-                foreach($req as $ampoule) :
-            ?>
-            <li>
-             <?= $ampoule['date_changement'];?> | <?= $ampoule['etage'];?> |  <?= $ampoule['position'];?> | <?= $ampoule['prix'] . '€';?> | 
-             <a href="http://projet:8080/projet_ampoule/form.php?id_ampoule=<?= $ampoule['id'] ?>">Modifier</a> | 
-             <a  onclick= "return confirm('Voulez vous vraiment supprimer cette ligne?')"  href="http://projet:8080/projet_ampoule/History.php?idampoule=<?= $ampoule['id'] ?>" >Supprimer</a>
-            </li>
-            <?php endforeach; ?>
-        </ul> 
-</div>
-<div class="page">        
+        ?>     
+    </div>
+    </body>
+    </html>
     <?php
-        for($i=1;$i<=$totalpage;$i++){
-             echo '<a href="http://projet:8080/projet_ampoule/History.php?page='.$i.'">'.$i.' </a> ';
-        }
-    ?>     
-</div>
-</body>
-</html>
-<?php
-if(isset($_GET['idampoule'])){
-    $req=$bdd->prepare("DELETE FROM `ampoule` WHERE id = :id_amp");
-    $req->bindValue(':id_amp', $_GET['idampoule'], PDO::PARAM_INT);
-    $req->execute();
-    header('Location: History.php');
-}    
-?>
+    if(isset($_GET['idampoule'])){
+        $req=$bdd->prepare("DELETE FROM `ampoule` WHERE id = :id_amp");
+        $req->bindValue(':id_amp', $_GET['idampoule'], PDO::PARAM_INT);
+        $req->execute();
+        header('Location: History.php');
+    }    
+    ?>

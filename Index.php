@@ -9,7 +9,6 @@
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
-<h1>Connexion</h1>
 <form class="login" method="POST">
     <input type="text" placeholder="Nom d'utilisateur" name="username" required>
     <input type="password" placeholder="Mot de passe" name="password" required>
@@ -35,6 +34,7 @@ try {
         $password = valid_data($_POST['password']);  
         if($username == "Concierge" && $password == "Ampoule"){
             session_start();
+            $_SESSION['login'] = Concierge;
             header('Location: History.php');
         }else{
            echo '<p>Utilisateur ou mot de passe incorrect</p>';

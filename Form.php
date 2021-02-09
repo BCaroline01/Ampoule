@@ -1,3 +1,18 @@
+<?php
+    session_start(); 
+    if(empty($_SESSION['login'])) {
+        header("location:Index.php");
+        exit;
+    }   
+    if(isset($_GET['deconnexion'])){  
+            $_SESSION = array();
+            unset($_SESSION); 
+            unset($_COOKIE);
+            session_destroy();
+            header("location:Index.php");
+            exit;
+    }        
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,52 +24,43 @@
     <link href="style.css" rel="stylesheet">
 </head>
 <?php
-try {
-    $bdd = new PDO('mysql:host=localhost;dbname=ampoule', 'root');
-    } catch (PDOException $e) {
-    print "Erreur: " . $e->getMessage() . "<br/>";
-    die();
+    try {
+        $bdd = new PDO('mysql:host=localhost;dbname=ampoule', 'root');
+        } catch (PDOException $e) {
+            print "Erreur: " . $e->getMessage() . "<br/>";
+            die();
+    }
+      
+    if(isset($_GET["submit"])){
+        $date = ($_GET["date"]);
+        $floor = ($_GET["floor"]);
+        $position = ($_GET["position"]);
+        $price = ($_GET["price"]);
+
+            if($_GET['id_ampoule']){
+                $update=$bdd->prepare("UPDATE `ampoule` SET `date_changement`=:date,`etage`=:floor,`position`=:position,`prix`=:price WHERE id = :id_amp");
+                $update->bindParam(':id_amp', $_GET['id_ampoule'], PDO::PARAM_INT);
+                $update->bindParam(':date',$date);
+                $update->bindParam(':floor',$floor);
+                $update->bindParam(':position',$position);
+                $update->bindParam(':price',$price);
+                $update->execute();
+                header('Location: History.php');
+                } else {
+                $insertion = $bdd->prepare ("INSERT INTO `ampoule`(`date_changement`, `etage`, `position`, `prix`) VALUES (:date,:floor, :position, :price)");
+                $insertion->bindParam(':date',$date);
+                $insertion->bindParam(':floor',$floor);
+                $insertion->bindParam(':position',$position);
+                $insertion->bindParam(':price',$price);
+                $insertion->execute();  
+                }
     }
 
-//Logout        
-session_start();        
-if(isset($_GET['deconnexion'])){ 
-    if($_GET['deconnexion']==true){  
-        session_destroy();
-        header("location:Index.php");
-    }
-}        
-
-if(isset($_GET["submit"])){
-    $date = ($_GET["date"]);
-    $floor = ($_GET["floor"]);
-    $position = ($_GET["position"]);
-    $price = ($_GET["price"]);
-
-        if($_GET['id_ampoule']){
-            $update=$bdd->prepare("UPDATE `ampoule` SET `date_changement`=:date,`etage`=:floor,`position`=:position,`prix`=:price WHERE id = :id_amp");
-            $update->bindParam(':id_amp', $_GET['id_ampoule'], PDO::PARAM_INT);
-            $update->bindParam(':date',$date);
-            $update->bindParam(':floor',$floor);
-            $update->bindParam(':position',$position);
-            $update->bindParam(':price',$price);
-            $update->execute();
-            header('Location: History.php');
-            } else {
-              $insertion = $bdd->prepare ("INSERT INTO `ampoule`(`date_changement`, `etage`, `position`, `prix`) VALUES (:date,:floor, :position, :price)");
-              $insertion->bindParam(':date',$date);
-              $insertion->bindParam(':floor',$floor);
-              $insertion->bindParam(':position',$position);
-              $insertion->bindParam(':price',$price);
-              $insertion->execute();  
-            }
-}
-
-$req=$bdd->prepare("SELECT * FROM `ampoule` WHERE id = :id_amp");
-$req->bindParam(':id_amp', $_GET['id_ampoule'], PDO::PARAM_INT);
-$req->execute();
-$ampoule = $req->fetch(); 
-?>
+    $req=$bdd->prepare("SELECT * FROM `ampoule` WHERE id = :id_amp");
+    $req->bindParam(':id_amp', $_GET['id_ampoule'], PDO::PARAM_INT);
+    $req->execute();
+    $ampoule = $req->fetch(); 
+    ?>
 
 <body>
 <header>
@@ -62,7 +68,7 @@ $ampoule = $req->fetch();
         <ul>
             <li><a href="History.php">Accueil</a></li>
             <li><a href="Form.php">Formulaire</a></li>
-            <li><a href='Index.php?deconnexion=true'>Déconnexion</a></li>      
+            <li><a href="?deconnexion">Déconnexion</a></li>       
         </ul>
     </nav>
 </header>
