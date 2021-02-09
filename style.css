@@ -35,7 +35,7 @@ div.history > h1{
     margin: 3rem;
     text-align: center;
     color: white;
-    font-family: 'Conv_Oswald-VariableFont_wght';
+    font-family: 'Conv_Oswald-VariableFont_wght', Arial, Helvetica, sans-serif;
     font-size: 4rem;
 
 }
@@ -53,7 +53,7 @@ div.history > ul{
 div.history > ul > li{
     padding: 1rem;
     font-size: 23px;
-    font-family: 'Conv_Oswald-VariableFont_wght';
+    font-family: 'Conv_Oswald-VariableFont_wght', Arial, Helvetica, sans-serif;
     
 }
 
@@ -93,7 +93,7 @@ form{
 form > div{
     display: flex;
     flex-direction: column;
-    font-family: 'Conv_Oswald-VariableFont_wght';
+    font-family: 'Conv_Oswald-VariableFont_wght', Arial, Helvetica, sans-serif;
     font-size: 1.3rem;
 }
 
@@ -116,7 +116,7 @@ input[type=submit]{
     padding: 10px 20px;
     border: 1px solid #333;
     cursor: pointer;
-    font-family: 'Conv_Oswald-VariableFont_wght';
+    font-family: 'Conv_Oswald-VariableFont_wght', Arial, Helvetica, sans-serif;
     font-size: 1.3rem;
 }
 
